@@ -3,7 +3,7 @@ import type { TCreateTaskData, TUpdateTaskData } from "../types/type"
 
 const axios = new Axios()
 
-export const API_URL: string = "http://localhost:4200/api"
+export const API_URL: string = "https://backend-todo-wqxq.onrender.com/api"
 
 
 export const getTasks = async (page: number) => {

@@ -41,6 +41,7 @@ export const MainPage = (): JSX.Element => {
 
     try {
       const data = await createTask({ title, description });
+
       setTasks((prev) => [...prev, data]);
 
       setTitle("");
