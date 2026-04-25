@@ -5,7 +5,7 @@ const axios = new Axios()
 
 export const API_URL: string = "https://backend-todo-wqxq.onrender.com/api"
 
-
+  
 export const getTasks = async (page: number) => {
   try {
     const response = await axios.get(`${API_URL}/tasks?limit=5&page=${page}`)
@@ -63,5 +63,27 @@ export const deleteTask = async (id: string) => {
     await axios.delete(`${API_URL}/tasks/delete/${id}`)
   } catch {
     throw new Error("Failed to delete task")
+  }
+}
+
+export const registerUser = async (data: any) => {
+  try {
+    const response = await axios.post(`http://localhost:4200/api/auth/register`, JSON.stringify(data), {
+      headers: { "Content-Type": "application/json" }
+    })
+    return JSON.parse(response.data)
+  } catch {
+    throw new Error("Failed to register user")
+  }
+}
+
+export const getUserByToken = async (accessToken: string) => {
+  try {
+    const response = await axios.get(`http://localhost:4200/api/users/me`, {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    })
+    return JSON.parse(response.data)
+  } catch {
+    throw new Error("Failed to fetch user data")
   }
 }

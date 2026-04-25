@@ -1,11 +1,21 @@
 .header {
-  background: #0D0D0D;
+  background: #0d0d0d;
 
   .header__inner {
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 50px 0 100px 0;
+
+    .header__account {
+
+      .header__account-login {
+        color: #f2f2f2;
+      }
+      .header__accont-register {
+        color: #d9d9d9;
+      }
+    }
   }
 }
 
@@ -26,11 +36,11 @@
     .inputs__left-title,
     .inputs__left-description {
       border-radius: 8px;
-      border: 1px solid var(--Gray-700, #0D0D0D);
+      border: 1px solid var(--Gray-700, #0d0d0d);
       background: var(--Gray-500, #262626);
       padding: 10px 16px;
       width: 720px;
-      color: #F2F2F2;
+      color: #f2f2f2;
     }
 
     .inputs__left-title:placeholder,
@@ -51,10 +61,10 @@
     margin-top: 20px;
 
     border-radius: 12px;
-    background: var(--Blue-Dark, #1E6F9F);
+    background: var(--Blue-Dark, #1e6f9f);
     padding: 12px 32px 12px 16px;
 
-    color: var(--Gray-100, #F2F2F2);
+    color: var(--Gray-100, #f2f2f2);
     font-family: Inter;
     font-size: 14px;
     font-weight: 600;
@@ -82,13 +92,13 @@
     justify-content: space-between;
 
     .tasks__info-total {
-      color: var(--Blue, #4EA8DE);
+      color: var(--Blue, #4ea8de);
       font-size: 14px;
       font-weight: 700;
       line-height: normal;
 
       span {
-        color: var(--Gray-200, #D9D9D9);
+        color: var(--Gray-200, #d9d9d9);
         font-size: 12px;
         font-weight: 700;
         line-height: normal;
@@ -101,7 +111,7 @@
     }
 
     .tasks__info-completed {
-      color: var(--Purple, #8284FA);
+      color: var(--Purple, #8284fa);
       font-family: Inter;
       font-size: 14px;
       font-style: normal;
@@ -109,7 +119,7 @@
       line-height: normal;
 
       span {
-        color: var(--Gray-200, #D9D9D9);
+        color: var(--Gray-200, #d9d9d9);
         font-size: 13px;
         font-weight: 700;
         line-height: normal;
@@ -122,5 +132,3 @@
     }
   }
 }
-
-

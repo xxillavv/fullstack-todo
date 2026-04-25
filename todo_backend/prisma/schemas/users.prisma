@@ -1,0 +1,12 @@
+model User {
+  id           Int      @id @default(autoincrement()) @map("user_id")
+  username     String
+  email        String   @unique
+  hashPassword String   @map("password")
+  refreshToken String?  @map("refresh_token")
+  createdAd    DateTime @default(now()) @map("created_at")
+
+  tasks Task[]
+
+  @@map("users")
+}

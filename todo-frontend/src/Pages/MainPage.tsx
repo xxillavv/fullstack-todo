@@ -1,6 +1,11 @@
 import React, { useEffect, type JSX, useState, createContext } from "react";
-import type { TTask } from "../types/type";
-import { createTask, getTasks } from "../api/api";
+import type {
+  IUserLoginData,
+  IUserOptionalData,
+  IUserRegistrationData,
+  TTask,
+} from "../types/type";
+import { createTask, getTasks, getUserByToken, registerUser } from "../api/api";
 import { EmptyPage } from "../components/EmptyPage/EmptyPage";
 import { TasksSection } from "../components/TasksSection/TasksSection";
 import "./MainPage.scss";
@@ -14,6 +19,18 @@ export const MainPage = (): JSX.Element => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [buttons, setButtons] = useState<string[]>([]);
+  const [userStatus, setUserStatus] = useState<string>("");
+  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [user, setUser] = useState<IUserRegistrationData>({
+    email: "",
+    password: "",
+    username: "",
+  });
+  const [userData, setUserData] = useState<IUserOptionalData>({
+    email: "",
+    password: "",
+    username: "",
+  });
 
   const fetchTasks = async (page: number) => {
     try {
@@ -29,8 +46,21 @@ export const MainPage = (): JSX.Element => {
     }
   };
 
+  const getCurrentUser = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      if (accessToken) {
+        const user = await getUserByToken(accessToken);
+        setUser(user);
+      }
+    } catch (error) {
+      throw new Error("Failed to fetch user data");
+    }
+  };
+
   useEffect(() => {
     fetchTasks(1);
+    getCurrentUser()
   }, []);
 
   const handleAddTask = async () => {
@@ -55,12 +85,103 @@ export const MainPage = (): JSX.Element => {
     fetchTasks(page);
   };
 
+  const handleRegisterUser = async (
+    inputsData: IUserOptionalData,
+    e: React.FormEvent<HTMLFormElement>,
+  ) => {
+    e.preventDefault();
+
+    try {
+      const { accessToken, data } = await registerUser(inputsData);
+      localStorage.setItem("accessToken", accessToken);
+
+      setIsLogin(true);
+      setUser(data);
+    } catch (error) {
+      console.error("Error registering user:", error);
+    }
+  };
+
   return (
     <>
       <header className="header">
         <div className="container">
           <div className="header__inner">
             <img src={logo} alt="website_logo" className="header__logo" />
+            <div className="header__account">
+              <button
+                className="header__account-login"
+                onClick={() => setUserStatus("logged-in")}
+              >
+                Login
+              </button>
+              <button
+                className="header__accont-register"
+                onClick={() => setUserStatus("registered")}
+              >
+                Register
+              </button>
+
+              {userStatus === "registered" ? (
+                <form
+                  onSubmit={(e) => handleRegisterUser(userData, e)}
+                  className="header__account-registration-form"
+                >
+                  <input
+                    className="registration__form-input"
+                    type="text"
+                    placeholder="enter username"
+                    value={userData?.username || ""}
+                    onChange={(e) =>
+                      setUserData({ ...userData, username: e.target.value })
+                    }
+                  />
+                  <input
+                    className="registration__form-input"
+                    type="text"
+                    placeholder="enter email"
+                    value={userData?.email || ""}
+                    onChange={(e) =>
+                      setUserData({ ...userData, email: e.target.value })
+                    }
+                  />
+                  <input
+                    className="registration__form-input"
+                    type="text"
+                    placeholder="enter password"
+                    value={userData?.password || ""}
+                    onChange={(e) =>
+                      setUserData({ ...userData, password: e.target.value })
+                    }
+                  />
+                  <button type="submit">Register</button>
+                </form>
+              ) : userStatus === "logged-in" ? (
+                <form className="header__account-login-form">
+                  <input
+                    className="login__form-input"
+                    type="text"
+                    placeholder="enter email"
+                    value={userData?.email || ""}
+                    onChange={(e) =>
+                      setUserData({ ...userData, email: e.target.value })
+                    }
+                  />
+                  <input
+                    className="login__form-input"
+                    type="text"
+                    placeholder="enter password"
+                    value={userData?.password || ""}
+                    onChange={(e) =>
+                      setUserData({ ...userData, password: e.target.value })
+                    }
+                  />
+                  <button type="submit">Login</button>
+                </form>
+              ) : user ? (
+                <p className="header__account-user" style={{color: 'white'}}>Hello, {user.username}!</p>
+              ) : null}
+            </div>
           </div>
         </div>
       </header>
