@@ -1,6 +1,5 @@
 import React, { useEffect, type JSX, useState, createContext } from "react";
 import type {
-  IUserLoginData,
   IUserOptionalData,
   IUserRegistrationData,
   TTask,
@@ -20,7 +19,6 @@ export const MainPage = (): JSX.Element => {
   const [description, setDescription] = useState<string>("");
   const [buttons, setButtons] = useState<string[]>([]);
   const [userStatus, setUserStatus] = useState<string>("");
-  const [isLogin, setIsLogin] = useState<boolean>(false);
   const [user, setUser] = useState<IUserRegistrationData>({
     email: "",
     password: "",
@@ -42,7 +40,7 @@ export const MainPage = (): JSX.Element => {
 
       setButtons(Array.from({ length: pagesCount }, (_, i) => String(i + 1)));
     } catch {
-      throw new Error("Failed to fetch tasks or count pages");
+      throw new Error("Fail to fetch tasks or count pages");
     }
   };
 
@@ -60,7 +58,7 @@ export const MainPage = (): JSX.Element => {
 
   useEffect(() => {
     fetchTasks(1);
-    getCurrentUser()
+    getCurrentUser();
   }, []);
 
   const handleAddTask = async () => {
@@ -94,8 +92,6 @@ export const MainPage = (): JSX.Element => {
     try {
       const { accessToken, data } = await registerUser(inputsData);
       localStorage.setItem("accessToken", accessToken);
-
-      setIsLogin(true);
       setUser(data);
     } catch (error) {
       console.error("Error registering user:", error);
@@ -179,7 +175,9 @@ export const MainPage = (): JSX.Element => {
                   <button type="submit">Login</button>
                 </form>
               ) : user ? (
-                <p className="header__account-user" style={{color: 'white'}}>Hello, {user.username}!</p>
+                <p className="header__account-user" style={{ color: "white" }}>
+                  Hello, {user.username}!
+                </p>
               ) : null}
             </div>
           </div>
