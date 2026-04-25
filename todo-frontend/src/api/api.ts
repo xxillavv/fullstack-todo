@@ -68,7 +68,7 @@ export const deleteTask = async (id: string) => {
 
 export const registerUser = async (data: any) => {
   try {
-    const response = await axios.post(`http://localhost:4200/api/auth/register`, JSON.stringify(data), {
+    const response = await axios.post(`${API_URL}/auth/register`, JSON.stringify(data), {
       headers: { "Content-Type": "application/json" }
     })
     return JSON.parse(response.data)
@@ -79,7 +79,7 @@ export const registerUser = async (data: any) => {
 
 export const getUserByToken = async (accessToken: string) => {
   try {
-    const response = await axios.get(`http://localhost:4200/api/users/me`, {
+    const response = await axios.get(`${API_URL}/users/me`, {
       headers: { Authorization: `Bearer ${accessToken}` }
     })
     return JSON.parse(response.data)
