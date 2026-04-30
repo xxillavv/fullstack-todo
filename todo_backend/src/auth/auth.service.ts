@@ -44,6 +44,9 @@ export class AuthService {
       const accessToken = await this.jwt.sign(authPayload)
       const refreshToken = await this.jwt.sign(refreshPayload, { expiresIn: '7d' })
 
+      console.log('accessToken', accessToken)
+      console.log('refreshToken', refreshToken)
+
       const hashRefreshToken = await bcrypt.hash(refreshToken, this.salt)
 
       await prisma.user.update({

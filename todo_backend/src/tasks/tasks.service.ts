@@ -3,34 +3,13 @@ import { prisma } from '../lib/prisma.lib.js';
 
 @Injectable()
 export class TasksService {
-  async getAllTasks(dto) {
-    const { limit, page } = dto;
-
-    const tasks = await prisma.task.findMany({
-      take: limit ? parseInt(limit) : undefined,
-      skip: page ? (parseInt(page) - 1) * parseInt(limit) : undefined,
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        completed: true,
-      }
-    });
-
-    const total = await prisma.task.count()
-
-    return { tasks, total }
+  getTasks() {
+    return prisma.task.findMany()
   }
 
-  getTaskById(id) {
-    return prisma.task.findUnique({
-      where: { id },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-        completed: true,
-      }
+  getUserTasks(userId) {
+    return prisma.task.findMany({
+      where: { userId }
     })
   }
 
@@ -39,6 +18,9 @@ export class TasksService {
       data: {
         title: dto.title,
         description: dto.description,
+        user: {
+          connect: { id: dto.userId }
+        }
       },
       select: {
         id: true,

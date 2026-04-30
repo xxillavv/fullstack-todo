@@ -1,4 +1,4 @@
-import { IsBoolean, IsOptional, IsString, IsUUID, MaxLength } from "class-validator"
+import { IsBoolean, IsNumber, IsOptional, IsString, IsUUID, MaxLength } from "class-validator"
 
 export class CreateTaskDto {
   @IsString()
@@ -8,6 +8,9 @@ export class CreateTaskDto {
   @IsString()
   @MaxLength(128)
   description?: string
+
+  @IsNumber()
+  userId?: number
 }
 
 export class UpdateTaskDto {
