@@ -5,11 +5,8 @@ import logo from "../../assets/logo.svg";
 import { useAuth } from "../../hooks/useAuth";
 import { userApi } from "../../store/api/user.api";
 import { useUsers } from "../../hooks/useUsers";
-import { useTypedDispatch } from "../../hooks/useTypedDispatch";
 
 export const Header = () => {
-  const dispatch = useTypedDispatch();
-
   const { user, setUser, resetUser } = useUsers();
 
   const {
