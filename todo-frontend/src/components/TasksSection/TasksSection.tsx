@@ -1,21 +1,22 @@
-import { useContext, type JSX } from "react"
-import { TaskItem } from "../TaskItem/TaskItem"
-import { TaskContext } from "../../Pages/MainPage"
+import { type JSX } from "react";
+import type { TTask } from "../../types/type";
+import { TaskItem } from "../TaskItem/TaskItem";
 
-export const TasksSection = (): JSX.Element => {
-  const tasks = useContext(TaskContext)[0]
-
+type TTaskProps = {
+  taskList: TTask[] | undefined
+};
+export const TasksSection = ({ taskList }: TTaskProps): JSX.Element => {
   return (
     <>
       <section className="tasks__list">
         <div className="container">
           <div className="tasks__list-inner">
-            {tasks.map(task => {
-              return <TaskItem key={task.id} task={task} />
+            {taskList?.map((task, index) => {
+              return <TaskItem key={index} task={task} />;
             })}
           </div>
         </div>
       </section>
     </>
-  )
-}
+  );
+};

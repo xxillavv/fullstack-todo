@@ -1,67 +1,39 @@
-import { useContext, type JSX } from "react";
+import { type JSX } from "react";
 import type { TTask } from "../../types/type";
 import doneButton from "../../assets/done-button.svg";
 import inProgressButton from "../../assets/in-progress-button.svg";
 import taskDelete from "../../assets/tasl-delete.svg";
-import { deleteTask, updateTask } from "../../api/api";
-import { TaskContext } from "../../Pages/MainPage";
 import "./TaskItem.scss";
 
-export const TaskItem = ({ task }: { task: TTask }): JSX.Element => {
-  const context = useContext(TaskContext);
-  const setTasks = context[1];
+type TTaskItemProps = {
+  task: TTask
+}
+export const TaskItem = ({ task }: TTaskItemProps): JSX.Element => {
+  const handleTaskComplete = () => {
 
-  const onClickButtonDelete = async () => {
-    try {
-      setTasks((prev) => prev.filter((el) => el.id !== task.id));
+  }
 
-      await deleteTask(task.id);
-    } catch (error) {
-      console.error("Error deleting task:", error);
-    }
-  };
+  const handleTaskDelete = () => {
 
-  const onClickButtonComplete = async () => {
-    try {
-      setTasks((prev) =>
-        prev.map((el) =>
-          el.id === task.id ? { ...el, completed: !el.completed } : el,
-        ),
-      );
-
-      await updateTask(task.id, {
-        title: task.title,
-        description: task.description,
-        completed: !task.completed,
-      });
-    } catch (error) {
-      setTasks((prev) =>
-        prev.map((el) =>
-          el.id === task.id ? { ...el, completed: el.completed } : el,
-        ),
-      );
-
-      console.error("Error updating task:", error);
-    }
-  };
+  }
 
   return (
     <>
       <div className="task__item">
         <div className="task__item-inner">
-          <div className="task__item-left">
-            <button className="task__checkbox" onClick={onClickButtonComplete}>
+          <div className="task__left">
+            <button className="task__left-checkbox" onClick={handleTaskComplete}>
               <img
                 src={task.completed ? doneButton : inProgressButton}
                 alt={task.completed ? "Done" : "In Progress"}
               />
             </button>
-            <div className="task__item-info">
+            <div className="task__left-info">
               <h3
                 className={
                   task.completed
-                    ? "task__item-title completed"
-                    : "task__item-title"
+                    ? "task__left-info-title completed"
+                    : "task__left-info-title"
                 }
               >
                 {task.title}
@@ -69,15 +41,15 @@ export const TaskItem = ({ task }: { task: TTask }): JSX.Element => {
               <p
                 className={
                   task.completed
-                    ? "task__item-description completed"
-                    : "task__item-description"
+                    ? "task__left-info-description completed"
+                    : "task__left-info-description"
                 }
               >
                 {task.description}
               </p>
             </div>
           </div>
-          <button className="task__delete-button" onClick={onClickButtonDelete}>
+          <button className="task__delete-button" onClick={handleTaskDelete}>
             <img src={taskDelete} alt="Delete" />
           </button>
         </div>

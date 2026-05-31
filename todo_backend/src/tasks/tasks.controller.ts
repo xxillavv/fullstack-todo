@@ -17,18 +17,23 @@ export class TasksController {
     return this.tasksService.getUserTasks(userId)
   }
 
-  @Post()
-  createTask(@Body() dto: CreateTaskDto) {
-    return this.tasksService.createTask(dto);
+  @Post("user/:id")
+  createTask(@Param("id", ParseIntPipe) userId: number, @Body() dto: CreateTaskDto) {
+    return this.tasksService.createTask(userId, dto);
   }
 
   @Put(':id')
-  updateTask(@Param('id') id: string, @Body() dto: UpdateTaskDto) {
+  updateTask(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateTaskDto) {
     return this.tasksService.updateTask(id, dto);
   }
 
   @Delete(':id')
   deleteTask(@Param('id') id: string) {
     return this.tasksService.deleteTask(id);
+  }
+
+  @Get('error')
+  errorHandler() {
+    return this.tasksService.errorHandler()
   }
 }

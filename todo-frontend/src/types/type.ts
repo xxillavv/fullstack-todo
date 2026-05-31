@@ -1,30 +1,35 @@
 export type TTask = {
-  id: string
+  id?: string
   title: string
   description: string
   completed: boolean
-  createdAt: string
-  updatedAt: string
 }
 
-export type TUpdateTaskData = {
-  title?: string
-  description?: string
-  completed?: boolean
-}
-
-export type TCreateTaskData = {
+export interface TTaskData {
   title: string
   description: string
 }
 
-
-export type IUserRegistrationData = {
-  email: string
-  password: string
-  username: string
+export interface IPostTask {
+  userId: number | null
+  taskData: TTaskData
 }
 
-export type IUserLoginData = Omit<IUserRegistrationData, "username">
+export interface IUser {
+  id: number | null
+  username: string
+  email: string
+}
 
-export type IUserOptionalData = Partial<IUserRegistrationData>
+export type TFormStatus = 'register' | 'login' | ''
+
+export interface IUserData {
+  username?: string
+  email: string
+  password: string
+}
+
+export interface IUserResponse {
+  accessToken: string
+  data: IUser
+}
