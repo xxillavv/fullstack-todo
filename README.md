@@ -9,6 +9,8 @@ Fullstack application for manage your tasks.
 **Backend**
 - [NestJS](https://nestjs.com/)
 - [Prisma ORM](https://www.prisma.io/)
+
+
 **Frontend**
 - [React](https://react.dev/)
 - [Redux Toolkit](https://redux-toolkit.js.org/)
