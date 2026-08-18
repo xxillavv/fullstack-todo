@@ -11,14 +11,17 @@ export class CreateTaskDto {
 }
 
 export class UpdateTaskDto {
+  @IsOptional()
   @IsString()
   @MaxLength(64)
   title?: string
 
+  @IsOptional()
   @IsString()
   @MaxLength(128)
   description?: string
 
+  @IsOptional()
   @IsBoolean()
   completed?: boolean
 }

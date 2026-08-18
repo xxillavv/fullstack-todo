@@ -41,7 +41,7 @@ export class AuthService {
         sub: user.id,
       }
 
-      const accessToken = await this.jwt.sign(authPayload)
+      const accessToken = await this.jwt.sign(authPayload, { expiresIn: "10m" })
       const refreshToken = await this.jwt.sign(refreshPayload, { expiresIn: '7d' })
 
       const hashRefreshToken = await bcrypt.hash(refreshToken, this.salt)
@@ -53,7 +53,7 @@ export class AuthService {
         }
       })
 
-      return { accessToken, data: { id: user.id, email: user.email, username: user.username } }
+      return { accessToken, refreshToken, data: { id: user.id, email: user.email, username: user.username } }
     } catch (error) {
       if (error instanceof ConflictException) {
         throw error
@@ -76,15 +76,17 @@ export class AuthService {
       const accessPayload = { sub: user.id, email: user.email }
       const refreshPayload = { sub: user.id }
 
-      const accessToken = await this.jwt.sign(accessPayload)
-      const refreshToken = await this.jwt.sign(refreshPayload)
+      const accessToken = await this.jwt.sign(accessPayload, { expiresIn: "10m" })
+      const refreshToken = await this.jwt.sign(refreshPayload, { expiresIn: '7d' })
+
+      const hashRefreshToken = await bcrypt.hash(refreshToken, this.salt)
 
       await prisma.user.update({
         where: { email },
-        data: { refreshToken }
+        data: { refreshToken: hashRefreshToken }
       })
 
-      return { accessToken, data: { id: user.id, email: user.email, username: user.username } }
+      return { accessToken, refreshToken, data: { id: user.id, email: user.email, username: user.username } }
 
     } catch (error) {
       if (error instanceof NotFoundException || error instanceof UnauthorizedException) throw error

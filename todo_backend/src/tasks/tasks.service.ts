@@ -1,5 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { prisma } from '../lib/prisma.lib.js';
+import { UpdateTaskDto } from '../dto/tasks.dto.js';
 
 @Injectable()
 export class TasksService {
@@ -44,7 +45,7 @@ export class TasksService {
     })
   }
 
-  updateTask(taskId, dto) {
+  updateTask(taskId: string, dto: UpdateTaskDto) {
     return prisma.task.update({
       where: { id: taskId },
       data: {

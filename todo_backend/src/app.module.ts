@@ -11,7 +11,7 @@ import { UsersModule } from './users/users.module.js';
     JwtModule.register({
       global: true,
       secret: "MY-SECRET-KEY",
-      signOptions: { expiresIn: '15m' }
+      signOptions: { expiresIn: '10m' }
     }),
     ConfigModule.forRoot({
       isGlobal: true,
