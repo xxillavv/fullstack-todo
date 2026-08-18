@@ -5,18 +5,17 @@ import { TaskItem } from "../TaskItem/TaskItem";
 type TTaskProps = {
   taskList: TTask[] | undefined
 };
+
 export const TasksSection = ({ taskList }: TTaskProps): JSX.Element => {
   return (
-    <>
-      <section className="tasks__list">
-        <div className="container">
-          <div className="tasks__list-inner">
-            {taskList?.map((task, index) => {
-              return <TaskItem key={index} task={task} />;
-            })}
-          </div>
+    <section className="tasks-list">
+      <div className="container">
+        <div className="tasks-list__inner">
+          {taskList?.map((task, index) => {
+            return <TaskItem key={index} task={task} />;
+          })}
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 };

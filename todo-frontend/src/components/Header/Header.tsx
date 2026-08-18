@@ -1,17 +1,23 @@
 import "./Header.scss";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import type { TFormStatus, IUserData } from "../../types/type";
-import logo from "../../assets/logo.svg";
+import { Terminal } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 import { userApi } from "../../store/api/user.api";
-import { useUsers } from "../../hooks/useUsers";
+import { getErrorMessage } from "../../utils/getErrorMessage";
 
 export const Header = () => {
-  const { user, setUser, resetUser } = useUsers();
+  const [formStatus, setFormStatus] = useState<TFormStatus>("");
+
+  const [userData, setUserData] = useState<IUserData>({
+    username: "",
+    email: "",
+    password: "",
+  });
 
   const {
-    registerUser: regUser,
-    logInUser: loginUser,
+    registerUser,
+    logInUser,
     logOutUser,
 
     isRegisterLoading,
@@ -22,143 +28,144 @@ export const Header = () => {
     isLogInError: isLoginError,
     logInError: loginError,
   } = useAuth();
-  const [getMe] = userApi.useGetMeMutation();
 
-  const [formStatus, setFormStatus] = useState<TFormStatus>("");
-
-  const [userData, setUserData] = useState<IUserData>({
-    username: "",
-    email: "",
-    password: "",
-  });
-
-  useEffect(() => {
-    const accessToken = localStorage.getItem("accessToken");
-
-    if (!accessToken) return;
-
-    const fetchMe = async () => {
-      try {
-        const result = await getMe(accessToken).unwrap();
-        setUser(result);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchMe();
-  }, []);
+  const { data, isLoading } = userApi.useGetMeQuery();
 
   const handleRegister = async (data: IUserData, e: React.SyntheticEvent) => {
     e.preventDefault();
-
-    const result = await regUser(data);
-    setUser(result.data);
+    try {
+      await registerUser(data);
+      setFormStatus("");
+      setUserData({ username: "", email: "", password: "" });
+    } catch {
+      // Handled by Redux error state
+    }
   };
 
   const handleLogin = async (data: IUserData, e: React.SyntheticEvent) => {
     e.preventDefault();
-
-    const { username, ...loginData } = data;
-    const result = await loginUser(loginData);
-
-    setUser(result.data);
+    try {
+      const { username, ...loginData } = data;
+      await logInUser(loginData);
+      setFormStatus("");
+      setUserData({ username: "", email: "", password: "" });
+    } catch {
+      // Handled by Redux error state
+    }
   };
 
   const handleLogOut = () => {
     logOutUser();
-    resetUser();
+    setUserData({
+      username: "",
+      email: "",
+      password: "",
+    });
+    setFormStatus("");
   };
 
-  if (isRegisterLoading || isLoginLoading) {
-    return <p className="loading__title">Loading...</p>;
+  if (isRegisterLoading || isLoginLoading || isLoading) {
+    return (
+      <div className="header-loading">
+        <div className="header-loading__spinner" />
+        <p className="header-loading__text">Loading...</p>
+      </div>
+    );
   }
 
   return (
     <header className="header">
       <div className="container">
         <div className="header__inner">
-          <img src={logo} alt="website_logo" className="header__inner-logo" />
+          <div className="header__logo">
+            <div className="header__logo-icon">
+              <Terminal size={22} />
+            </div>
+            <h1 className="header__logo-text">
+              <span className="header__logo-first">~/</span>
+              <span className="header__logo-second">todo</span>
+            </h1>
+          </div>
 
-          {user?.id === null ? (
+          {!data?.id ? (
             <div className="header__auth">
-              <button
-                className="header__auth-button"
-                onClick={() => setFormStatus("login")}
-              >
-                Login
-              </button>
-              <button
-                className="header__auth-button"
-                onClick={() => setFormStatus("register")}
-              >
-                Register
-              </button>
+              <div className="header__auth-buttons">
+                <button
+                  className={`header__auth-tab ${formStatus === "login" ? "header__auth-tab--active" : ""}`}
+                  onClick={() => setFormStatus("login")}
+                >
+                  Login
+                </button>
+                <button
+                  className={`header__auth-tab ${formStatus === "register" ? "header__auth-tab--active" : ""}`}
+                  onClick={() => setFormStatus("register")}
+                >
+                  Register
+                </button>
+              </div>
 
               {formStatus !== "" && (
-                <form className="auth__form">
+                <form className="header__form">
                   <input
-                    className="auth__form-input"
-                    type="text"
+                    className="header__form-input"
+                    type="email"
                     onChange={(e) =>
                       setUserData({ ...userData, email: e.target.value })
                     }
                     value={userData.email}
-                    placeholder="enter email"
+                    placeholder="Email"
+                    autoComplete="email"
                   />
                   {formStatus === "register" && (
                     <input
-                      className="auth__form-input"
+                      className="header__form-input"
                       type="text"
                       onChange={(e) =>
                         setUserData({ ...userData, username: e.target.value })
                       }
                       value={userData.username}
-                      placeholder="enter username"
+                      placeholder="Username"
+                      autoComplete="username"
                     />
                   )}
                   <input
-                    className="auth__form-input"
-                    type="text"
+                    className="header__form-input"
+                    type="password"
                     onChange={(e) =>
                       setUserData({ ...userData, password: e.target.value })
                     }
                     id="password__input"
                     value={userData.password}
-                    placeholder="enter password"
+                    placeholder="Password"
+                    autoComplete="current-password"
                   />
+
                   {isLoginError && (
-                    <label
-                      className="auth__form-label"
-                      htmlFor="password__input"
-                    >
-                      {(loginError as any)?.data?.message}
-                    </label>
+                    <div className="header__form-error">
+                      {getErrorMessage(loginError)}
+                    </div>
                   )}
                   {isRegisterError && (
-                    <label
-                      className="auth__form-label"
-                      htmlFor="password__input"
-                    >
-                      {(registerError as any)?.data?.message}
-                    </label>
+                    <div className="header__form-error">
+                      {getErrorMessage(registerError)}
+                    </div>
                   )}
 
                   {formStatus === "register" ? (
                     <button
                       type="submit"
-                      className="auth__form-button"
+                      className="header__form-submit"
                       onClick={(event) => handleRegister(userData, event)}
                     >
-                      Register
+                      Create Account
                     </button>
                   ) : (
                     <button
                       type="submit"
-                      className="auth__form-button"
+                      className="header__form-submit"
                       onClick={(event) => handleLogin(userData, event)}
                     >
-                      Login
+                      Sign In
                     </button>
                   )}
                 </form>
@@ -166,9 +173,14 @@ export const Header = () => {
             </div>
           ) : (
             <div className="header__user">
-              <p className="header__user-name">{user?.username}</p>
-              <p className="header__user-email">{user?.email}</p>
-              <button className="header__user-button" onClick={handleLogOut}>
+              <div className="header__user-avatar">
+                {data?.username?.charAt(0).toUpperCase()}
+              </div>
+              <div className="header__user-info">
+                <p className="header__user-name">{data?.username}</p>
+                <p className="header__user-email">{data?.email}</p>
+              </div>
+              <button className="header__user-logout" onClick={handleLogOut}>
                 Log out
               </button>
             </div>

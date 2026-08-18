@@ -1,22 +1,20 @@
-import notLoginLogo from "../../assets/Grey_close_x.svg";
+import { LogIn } from "lucide-react";
 import "./NotLoginPage.scss";
 
 export const NotLoginPage = () => {
   return (
-    <section className="login">
+    <section className="not-logged">
       <div className="container">
-        <div className="login__inner">
-          <img
-            src={notLoginLogo}
-            alt="empty_state"
-            className="login__inner-img"
-          />
+        <div className="not-logged__card">
+          <div className="not-logged__icon">
+            <LogIn size={40} />
+          </div>
 
-          <p className="login__inner-title">
-            You are not login or register yet.
-          </p>
-          <p className="login__inner-subtitle">
-            Please login or register account to create new tasks.
+          <h2 className="not-logged__title">
+            You're not logged in yet
+          </h2>
+          <p className="not-logged__subtitle">
+            Please login or register to start creating tasks
           </p>
         </div>
       </div>
