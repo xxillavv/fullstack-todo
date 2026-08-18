@@ -22,7 +22,7 @@ export const Footer = (): JSX.Element => {
 
           <div className="footer__links">
             <a
-              href="https://github.com"
+              href="https://github.com/xxillavv/fullstack-todo"
               target="_blank"
               rel="noreferrer"
               className="footer__link"
@@ -36,7 +36,8 @@ export const Footer = (): JSX.Element => {
 
         <div className="footer__bottom">
           <p className="footer__copy">
-            Built with <Heart size={12} className="footer__heart" /> for developers who ship fast.
+            Built with <Heart size={12} className="footer__heart" /> for
+            developers who ship fast.
           </p>
         </div>
       </div>
