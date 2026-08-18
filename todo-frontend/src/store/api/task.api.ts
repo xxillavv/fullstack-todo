@@ -11,25 +11,27 @@ export const taskApi = baseApi.injectEndpoints({
       providesTags: ["Tasks"]
     }),
     postTask: builder.mutation<TTask, IPostTask>({
-      query: ({taskData, userId}) => ({
+      query: ({ taskData, userId }) => ({
         url: `tasks/user/${userId}`,
         method: "POST",
         body: taskData
       }),
       invalidatesTags: ["Tasks"]
     }),
-    updateTask: builder.mutation<TTask, { taskId: string, updateData: TTask }>({
+    updateTask: builder.mutation<TTask, { taskId: string, updateData: Partial<TTask> }>({
       query: ({ taskId, updateData }) => ({
         url: `tasks/${taskId}`,
-        method: "PUT",
+        method: "PATCH",
         body: updateData
-      })
+      }),
+      invalidatesTags: ["Tasks"]
     }),
     deleteTask: builder.mutation<void, string>({
       query: (taskId) => ({
         url: `tasks/${taskId}`,
         method: "DELETE"
-      })
+      }),
+      invalidatesTags: ["Tasks"]
     }),
   })
 })

@@ -29,7 +29,6 @@ export const TaskItem = ({ task }: TTaskItemProps): JSX.Element => {
     await updateTask({
       taskId: task.id,
       updateData: {
-        ...task,
         completed: !task.completed,
       },
     });
